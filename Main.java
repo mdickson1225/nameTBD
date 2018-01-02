@@ -4,7 +4,8 @@
  * Main file for the game
 */
 
-public class main {
+public class Main {
+	
 	public static void main(String args[]){
 		//Loop the REPL to manage stores then call other
 		//class' methods to run random events
