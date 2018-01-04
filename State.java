@@ -33,12 +33,14 @@ public class State {
 
     int store_type; //Hardware, convenience, etc. Later replace with an object 
 
-    public State() {
+    public State(String name) {
         /* Possibly determine these randomly */
-        this.capital = 20000;
+        this.storeName = name;
+    	this.capital = 20000;
         this.employees = 5;
         this.managers = 1;
         this.num_item_types = 25;
+        this.inventory = new int[25];
         this.store_quality = get_quality();//Call quality function after 
     }
 
