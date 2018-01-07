@@ -1,10 +1,12 @@
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +21,7 @@ import java.util.logging.Logger;
 //Customers go to each store, including competitors based off of advertising share. store quality determines purchases among customers
 public class State {
     //Instance vars
-
+    String file;
     String storeName;
     float capital;
     int employees;
@@ -58,18 +60,22 @@ public class State {
         try {
             PrintWriter out = new PrintWriter(new FileWriter(filename, false));
             out.println(encrypt((double) capital));
-            out.println(this.employees);
-            out.println(this.inventory);
-            out.println(this.inventory_quality);
-            out.println(this.managers);
-            out.println(this.num_item_types);
-            out.println(this.stock_price);
-            out.println(this.store_quality);
-            out.println(this.store_type);
+            out.println(encrypt((double) employees));
+            out.println(encrypt((double) inventory)); //What to do with this
+            out.println(encrypt((double) inventory_quality)); //and with this
+            out.println(encrypt((double) managers));
+            out.println(encrypt((double) num_item_types));
+            out.println(encrypt((double) stock_price));
+            out.println(encrypt((double) store_quality));
+            out.println(encrypt((double) store_type));
         } catch (IOException ex) {
             System.out.println("IO exception");
         }
-
+        
     }
-
+    public void load() throws FileNotFoundException {
+        File f = new File (file);
+        Scanner sc = new Scanner(f);
+        ((double) capital) = Double.parseDouble(sc.nextLine());
+    }
 }
