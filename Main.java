@@ -17,14 +17,14 @@ public class Main {
 		boolean done = false;
 		State st = new State("");
 		Scanner in = new Scanner(System.in);
-		String input = "";
+		String[] input = new String[0];
 		
 		//Print start screen to either start a new game or load existing save file
 		while(!done) {
 			System.out.printf("Welcome to Boss!\n1) New Game\n2)Load Saved\n");
-			input = in.nextLine();
+			input = in.nextLine().split(" ");
 			
-			switch(input) {
+			switch(input[0]) {
 			case "1":
 				System.out.println("What's the name of this new business?");
 				st = new State(in.nextLine());
@@ -45,11 +45,17 @@ public class Main {
 		while(!done) {
 			System.out.println("What will you do? Enter an action or \"help\"");
 						
-			input = in.nextLine();
+			input = in.nextLine().split(" ");// command format: "<cmd> arg1 arg2..."
 			
-			switch(input) {
+			
+			switch(input[0]) {
 				case "status":
 					print_status(st);
+					break;
+				case "buy":
+					int num = Integer.parseInt(input[1]);
+					String type = input[2];
+					System.out.println(st.buy(num,type));
 					break;
 				case "help":
 					break;
@@ -60,7 +66,6 @@ public class Main {
 					System.out.println("Invalid command!");
 					break;
 			}
-			
 			
 		}
 		

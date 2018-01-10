@@ -1,11 +1,14 @@
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,10 +29,14 @@ public class State {
     float capital;
     int employees;
     int managers;
+    
+    HashMap<String, Float> item_prices;
     int num_item_types;
     int[] inventory;
     int[] inventory_quality;
 
+    
+    
     float stock_price; //Possibly later
     float store_quality; //Calculation TBD
 
@@ -41,6 +48,7 @@ public class State {
     	this.capital = 20000;
         this.employees = 5;
         this.managers = 1;
+        this.item_prices = load_prices();
         this.num_item_types = 25;
         this.inventory = new int[25];
         this.store_quality = get_quality();//Call quality function after 
@@ -118,4 +126,43 @@ public class State {
         
         
     }
+    
+    //Attempt to buy n of item [item] and return a string of the result
+    public String buy(int n, String item) {
+    	if(this.capital < n*this.item_prices.get(item)) {
+    		return String.format("Insufficent funds\n");
+    	} else {
+    		this.capital -= n*this.item_prices.get(item);
+    		this.inventory[0] += n; //SCOTT TODO: Update vars to be able to fix this
+    		return String.format("Successfully bought %d %s\n", n, item + "s");
+    	}
+    }
+    
+    //Read prices from prices.txt or a similar file and return a hashmap
+    //containing those mappings 
+    private HashMap<String, Float> load_prices(){
+    	HashMap<String, Float> prices = new HashMap<String, Float>();
+    	//Read prices.txt or a similar file to load in the data
+    	try {
+			BufferedReader br = new BufferedReader(new FileReader("prices.txt"));
+			
+			String line;
+			String[] pieces;
+			
+			while((line = br.readLine()) != null){
+				pieces = line.split(" ");
+				prices.put(pieces[0],Float.parseFloat(pieces[1]) );
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found in load_prices");
+		} catch (NumberFormatException e) {
+			System.out.println("Bad input passed to parseFloat");
+		} catch (IOException e) {
+			System.out.println("IOException in load_prices");
+		}
+    	
+    	return prices;
+    }
+    
+    
 }
