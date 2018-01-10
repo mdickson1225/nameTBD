@@ -53,16 +53,47 @@ public class State {
 
         return 0;
     }
+    
+    //Quick function to mask the values of the  game state 
     private double encrypt(double x) {
         return 1/(1+ Math.pow(Math.E , x));
     }
+    
+    //For array variables, map each element to the encryption function and
+    //return the resulting array 
+    private double[] encrypt_arr(int[] x) {
+    	double[] res = new double[x.length];
+    	
+    	for(int i = 0; i < x.length; i++) {
+    		res[i] = encrypt((double) x[i]);
+    	}
+    	return res;
+    }
+    
+    //MARK TODO 2
+    //Given x which was encrypted by the above encrypt function return the 
+    //original value before encryption by reversing the function used to encrypt it (1/1+...)
+    private double decrypt(double x) {
+    	return 0;
+    }
+    
+    //MARK TODO 3
+    //Given an array of encrypted values, decrypt all of them and return the decrypted array 
+    private int[] decrypt_arr(double[] x) {
+    	int[] res = new int[x.length];
+    	
+    	return new int[0];
+    }
+    
+    //MARK TODO 1: test out this function and see how it stores the arrays. Preferably it'll be 
+    //space separated so storing [1,2,3] given something like "1 2 3" which can then be parsed
     private void save(String filename) {
         try {
             PrintWriter out = new PrintWriter(new FileWriter(filename, false));
             out.println(encrypt((double) capital));
             out.println(encrypt((double) employees));
-            out.println(encrypt((double) inventory)); //What to do with this
-            out.println(encrypt((double) inventory_quality)); //and with this
+            out.println(encrypt_arr(inventory)); 
+            out.println(encrypt_arr(inventory_quality)); 
             out.println(encrypt((double) managers));
             out.println(encrypt((double) num_item_types));
             out.println(encrypt((double) stock_price));
@@ -73,9 +104,18 @@ public class State {
         }
         
     }
-    public void load() throws FileNotFoundException {
-        File f = new File (file);
+    /* Seems to try and load the game state data from its stored format?
+     * Will need to account for undoing encryption
+     * MARK TODO 1: Given a file stored just how "save" above does it
+     * go through and get values for each of state's instance variables
+     * by reading the line and undoing the encryption */
+    public void load(String filename) throws FileNotFoundException {
+        File f = new File (filename); //should be a constant but might as well allow different names 
         Scanner sc = new Scanner(f);
-        ((double) capital) = Double.parseDouble(sc.nextLine());
+        this.capital = (float) Double.parseDouble(sc.nextLine());
+        this.employees = 0; //Placeholder. repalce 0 with actual code
+        //Add in lines to read inventory and the rest of the variables as above 
+        
+        
     }
 }
