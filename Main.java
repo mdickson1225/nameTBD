@@ -99,20 +99,7 @@ public class Main {
 		System.out.printf("Captial: %f\n", st.capital);
 		System.out.printf("Managers: %d\n", st.managers);
 		System.out.printf("Employees: %d\n", st.employees);
-		System.out.printf("Items in stock: %d\n", array_sum(st.inventory));
+		System.out.printf("Items in stock: %d\n", st.getTotalNumItems());
+		System.out.printf("Total inventory value: %.2f\n",st.getTotalInventoryValue());
 	}
-	
-	
-	
-	private static int array_sum(int[] arr) {
-		int sum = 0;
-		
-		for(int i = 0; i < arr.length; i++) {
-			sum += arr[i];
-		}
-		return sum;
-	}
-	
-	
-
 }

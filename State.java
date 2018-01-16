@@ -4,12 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import static java.lang.Math.log;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import static java.lang.Math.log;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,7 +34,7 @@ public class State {
     
     HashMap<String, Float> item_prices;
     int num_item_types;
-    int[] inventory;
+    HashMap<String, Integer> inventory;
     int[] inventory_quality;
 
     
@@ -43,6 +44,7 @@ public class State {
 
     int store_type; //Hardware, convenience, etc. Later replace with an object 
 
+    
     public State(String name) {
         /* Possibly determine these randomly */
         this.storeName = name;
@@ -51,19 +53,65 @@ public class State {
         this.managers = 1;
         this.item_prices = load_prices();
         this.num_item_types = 25;
-        this.inventory = new int[25];
+        this.inventory = new HashMap<String, Integer>();//SCOTT TODO initialize this with some zeros
         this.store_quality = get_quality();//Call quality function after 
     }
 
-
+    /* Getters and setters */
+    
+    public String getName() {
+    	return this.storeName;
+    }
+    
+    public float getCapital() {
+    	return this.capital;
+    }
+    
+    public int getNumEmployees() {
+    	return this.employees;
+    }
+    
+    public int getNumManagers() {
+    	return this.managers;
+    }
+    
+    public int getNumItemTypes() {
+    	return this.num_item_types;
+    }
+    
+    public HashMap<String, Float> getItemPrices(){
+    	return this.item_prices;
+    }
+    
+    public HashMap<String, Integer> getInventory(){
+    	return this.inventory;
+    }
+    
+    public int getTotalNumItems() {
+    	int num = 0;
+    	for(Map.Entry<String, Integer> en : this.inventory.entrySet()) {
+    		num += en.getValue();
+    	}
+    	return num;
+    }
+    
+    public float getTotalInventoryValue() {
+    	float val = 0;
+    	for(Map.Entry<String, Integer> en : this.inventory.entrySet()) {
+    		val += en.getValue() * this.item_prices.get(en.getKey());
+    	}
+    	return val;
+    }
+    
+    
     /* Use the instance variables to calculate the store quality 
 	 TODO: Mark */
     private float get_quality() {
-     store_quality = this.capital + 20*this.employees+ 40*this.managers + 30*this.num_item_types;
-     //First attempt at the quality function should probibly be changed later.
-        return store_quality;
+    	store_quality = this.capital + 20*this.employees+ 40*this.managers + 30*this.num_item_types;
+    	//First attempt at the quality function should probibly be changed later.
+    	return store_quality;
     }
-    
+        
     //Quick function to mask the values of the  game state 
     private double encrypt(double x) {
         return 1/(1+ Math.pow(Math.E , x));
@@ -80,26 +128,44 @@ public class State {
     	return res;
     }
     
+    //SCOTT TODO 1
+    //Given a hashmap, encode its contents in a string and return it
+    private String encrypt_map(HashMap<String, Integer> hm) {
+    	return "";
+    }
+    
+    
+    
     //MARK TODO 2
     //Given x which was encrypted by the above encrypt function return the 
     //original value before encryption by reversing the function used to encrypt it (1/1+...)
     private double decrypt(double x) {
-        return log((2*x) - 1);
-        //I'm not sure I did the math on this right.
+    	return log((2*x) - 1);
+    	//I'm not sure I did the math on this right.
     }
     
     //MARK TODO 3
     //Given an array of encrypted values, decrypt all of them and return the decrypted array 
-    private int[] decrypt_arr(double[] x) {
+    private double[] decrypt_arr(double[] x) {
+    	//int[] res = new int[x.length];
+  
     	double[] res = x;
     	double [] decArr = new double[res.length];   
-        for (int i = 0; i < res.length; i++) {
-           double decVal = decrypt(res[i]);
-           decArr[i] = decVal;
-          //Why are we returning a decrypted int array but the encrypted array is a double array? 
-        }
+    	for (int i = 0; i < res.length; i++) {
+    	double decVal = decrypt(res[i]);
+    	decArr[i] = decVal;
+    	//Why are we returning a decrypted int array but the encrypted array is a double array? 
+    	}
     	return decArr;
     }
+    
+    
+    //SCOTT TODO 2
+    //Take a string as input in the format "s1 i1 s2 i2..." etc.
+    private HashMap<String, Integer> decrypt_map(String hm){
+    	return new HashMap<String, Integer>();
+    }
+    
     
     //MARK TODO 1: test out this function and see how it stores the arrays. Preferably it'll be 
     //space separated so storing [1,2,3] given something like "1 2 3" which can then be parsed
@@ -108,13 +174,14 @@ public class State {
             PrintWriter out = new PrintWriter(new FileWriter(filename, false));
             out.println(encrypt((double) capital));
             out.println(encrypt((double) employees));
-            out.println(encrypt_arr(inventory)); 
+            out.println(encrypt_map(inventory)); 
             out.println(encrypt_arr(inventory_quality)); 
             out.println(encrypt((double) managers));
             out.println(encrypt((double) num_item_types));
             out.println(encrypt((double) stock_price));
             out.println(encrypt((double) store_quality));
             out.println(encrypt((double) store_type));
+            out.close();
         } catch (IOException ex) {
             System.out.println("IO exception");
         }
@@ -131,17 +198,18 @@ public class State {
         this.capital = (float) Double.parseDouble(sc.nextLine());
         this.employees = 0; //Placeholder. repalce 0 with actual code
         //Add in lines to read inventory and the rest of the variables as above 
-        
-        
+        sc.close();        
     }
     
     //Attempt to buy n of item [item] and return a string of the result
     public String buy(int n, String item) {
+    	if(!this.item_prices.containsKey(item))
+    		return String.format("%s is not a valid item\n", item);
     	if(this.capital < n*this.item_prices.get(item)) {
     		return String.format("Insufficent funds\n");
     	} else {
     		this.capital -= n*this.item_prices.get(item);
-    		this.inventory[0] += n; //SCOTT TODO: Update vars to be able to fix this
+    		this.inventory.put(item, this.inventory.get(item)+n); 
     		return String.format("Successfully bought %d %s\n", n, item + "s");
     	}
     }
@@ -161,6 +229,7 @@ public class State {
 				pieces = line.split(" ");
 				prices.put(pieces[0],Float.parseFloat(pieces[1]) );
 			}
+			br.close();
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found in load_prices");
 		} catch (NumberFormatException e) {
@@ -168,7 +237,7 @@ public class State {
 		} catch (IOException e) {
 			System.out.println("IOException in load_prices");
 		}
-    	
+ 
     	return prices;
     }
     
