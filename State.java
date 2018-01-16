@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import static java.lang.Math.log;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -58,8 +59,9 @@ public class State {
     /* Use the instance variables to calculate the store quality 
 	 TODO: Mark */
     private float get_quality() {
-
-        return 0;
+     store_quality = this.capital + 20*this.employees+ 40*this.managers + 30*this.num_item_types;
+     //First attempt at the quality function should probibly be changed later.
+        return store_quality;
     }
     
     //Quick function to mask the values of the  game state 
@@ -82,15 +84,21 @@ public class State {
     //Given x which was encrypted by the above encrypt function return the 
     //original value before encryption by reversing the function used to encrypt it (1/1+...)
     private double decrypt(double x) {
-    	return 0;
+        return log((2*x) - 1);
+        //I'm not sure I did the math on this right.
     }
     
     //MARK TODO 3
     //Given an array of encrypted values, decrypt all of them and return the decrypted array 
     private int[] decrypt_arr(double[] x) {
-    	int[] res = new int[x.length];
-    	
-    	return new int[0];
+    	double[] res = x;
+    	double [] decArr = new double[res.length];   
+        for (int i = 0; i < res.length; i++) {
+           double decVal = decrypt(res[i]);
+           decArr[i] = decVal;
+          //Why are we returning a decrypted int array but the encrypted array is a double array? 
+        }
+    	return decArr;
     }
     
     //MARK TODO 1: test out this function and see how it stores the arrays. Preferably it'll be 
