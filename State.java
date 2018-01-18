@@ -140,7 +140,7 @@ public class State {
     //Given x which was encrypted by the above encrypt function return the 
     //original value before encryption by reversing the function used to encrypt it (1/1+...)
     private double decrypt(double x) {
-    	return log((2*x) - 1);
+    	return log((1/x)-1);
     	//I'm not sure I did the math on this right.
     }
     
@@ -172,6 +172,7 @@ public class State {
     private void save(String filename) {
         try {
             PrintWriter out = new PrintWriter(new FileWriter(filename, false));
+            out.println(storeName);
             out.println(encrypt((double) capital));
             out.println(encrypt((double) employees));
             out.println(encrypt_map(inventory)); 
@@ -195,8 +196,15 @@ public class State {
     public void load(String filename) throws FileNotFoundException {
         File f = new File (filename); //should be a constant but might as well allow different names 
         Scanner sc = new Scanner(f);
-        this.capital = (float) Double.parseDouble(sc.nextLine());
-        this.employees = 0; //Placeholder. repalce 0 with actual code
+        this.capital = (float) decrypt(Double.parseDouble(sc.nextLine()));
+        this.employees = (int) decrypt(Double.parseDouble(sc.nextLine()));
+        //Not certain how to do the array and hashmap. Will work on later.
+        
+        this.managers = (int) decrypt(Double.parseDouble(sc.nextLine()));
+        this.num_item_types = (int) decrypt(Double.parseDouble(sc.nextLine()));
+        this.stock_price =(int) decrypt(Double.parseDouble(sc.nextLine()));
+        this.store_quality = (float) decrypt(Double.parseDouble(sc.nextLine()));
+        this.store_type = (int) decrypt(Double.parseDouble(sc.nextLine()));
         //Add in lines to read inventory and the rest of the variables as above 
         sc.close();        
     }
