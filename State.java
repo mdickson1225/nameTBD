@@ -39,9 +39,9 @@ public class State {
 
     
     
-    float stock_price; //Possibly later
+    double stock_price; //Possibly later
     float store_quality; //Calculation TBD
-
+    double sq_Change;
     int store_type; //Hardware, convenience, etc. Later replace with an object 
 
     
@@ -141,14 +141,17 @@ public class State {
     //original value before encryption by reversing the function used to encrypt it (1/1+...)
     private double decrypt(double x) {
     	return log((1/x)-1);
-    	//I'm not sure I did the math on this right.
+    	
+    }
+    //Tried my hand at making the stock part
+    private double stock_change() {
+      this.stock_price = 0.02 * sq_Change;  
+     
     }
     
     //MARK TODO 3
     //Given an array of encrypted values, decrypt all of them and return the decrypted array 
     private double[] decrypt_arr(double[] x) {
-    	//int[] res = new int[x.length];
-  
     	double[] res = x;
     	double [] decArr = new double[res.length];   
     	for (int i = 0; i < res.length; i++) {
@@ -199,7 +202,7 @@ public class State {
         this.capital = (float) decrypt(Double.parseDouble(sc.nextLine()));
         this.employees = (int) decrypt(Double.parseDouble(sc.nextLine()));
         //Not certain how to do the array and hashmap. Will work on later.
-        
+        this.inventory_quality = decrypt_arr((Double.parseDouble(sc.nextLine())));
         this.managers = (int) decrypt(Double.parseDouble(sc.nextLine()));
         this.num_item_types = (int) decrypt(Double.parseDouble(sc.nextLine()));
         this.stock_price =(int) decrypt(Double.parseDouble(sc.nextLine()));
