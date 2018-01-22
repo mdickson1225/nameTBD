@@ -167,10 +167,15 @@ public class State {
     }
     
     
-    //SCOTT TODO 2
     //Take a string as input in the format "s1 i1 s2 i2..." etc.
     private HashMap<String, Integer> decrypt_map(String hm){
-    	return new HashMap<String, Integer>();
+    	String[] kv_pairs = hm.split(" ");
+    	HashMap<String, Integer> hmap = new HashMap<String, Integer>();
+    	
+    	for(int i = 0; i < kv_pairs.length; i += 2) {
+    		hmap.put(kv_pairs[i], Integer.parseInt(kv_pairs[i+1]) );
+    	}
+    	return hmap;
     }
     
     

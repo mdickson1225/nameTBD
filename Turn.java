@@ -26,6 +26,7 @@ public class Turn {
 	}
 	
 	//SCOTT TODO: Given user input for a command step the game state
+	// Add support for more commands for possible 
 	public void stepTurn(String input) {
 		String[] cmd = input.split(" ");
 				
@@ -55,7 +56,7 @@ public class Turn {
 	[date] will be a string of the current date and time in the specified format
 	parse that string to get the numbers of the date/time and combine them into a final seed. */
 	private long getSeed() {
-		DateFormat df = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("dd MM yyyy HH mm ss");
 		Date now = new Date();
 		String date = df.format(now);
 		
