@@ -9,11 +9,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /* Mark Dickson 
  * Scott Dickson 
@@ -144,9 +146,11 @@ public class State {
     	
     }
     //Tried my hand at making the stock part
+    //TODO - randomness? 
     private double stock_change() {
       this.stock_price = 0.02 * sq_Change;  
-     
+      return 0;
+      
     }
     
     //MARK TODO 3
@@ -202,7 +206,7 @@ public class State {
         this.capital = (float) decrypt(Double.parseDouble(sc.nextLine()));
         this.employees = (int) decrypt(Double.parseDouble(sc.nextLine()));
         //Not certain how to do the array and hashmap. Will work on later.
-        this.inventory_quality = decrypt_arr((Double.parseDouble(sc.nextLine())));
+        this.inventory_quality = cast_to_int_array(decrypt_arr((array_from_string(sc.nextLine()))));
         this.managers = (int) decrypt(Double.parseDouble(sc.nextLine()));
         this.num_item_types = (int) decrypt(Double.parseDouble(sc.nextLine()));
         this.stock_price =(int) decrypt(Double.parseDouble(sc.nextLine()));
@@ -252,5 +256,19 @@ public class State {
     	return prices;
     }
     
+    /* Given a string representation of an array with elements space separated,
+     * return its array representation. Helper method for reading a saved file */
+    private double[] array_from_string(String arr) {
+    	return Arrays.stream(arr.split(" ")).mapToDouble(Double::parseDouble).toArray();
+    }
+    
+    /* Helper to do the same thing as arr = (int[]) arr */
+    private int[] cast_to_int_array(double[] arr) {
+    	int[] new_arr = new int[arr.length];
+    	for(int i = 0; i < arr.length; i++) {
+    		new_arr[i] = (int) arr[i];
+    	}
+    	return new_arr;
+    }
     
 }
