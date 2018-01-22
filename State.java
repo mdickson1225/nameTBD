@@ -271,4 +271,15 @@ public class State {
     	return new_arr;
     }
     
+    /* Print the information about this State object in a well formatted way */
+    public void print_state() {
+		System.out.printf("%s Business Report:\n", this.storeName);
+		System.out.printf("Captial: %f\n", this.capital);
+		System.out.printf("Managers: %d\n", this.managers);
+		System.out.printf("Employees: %d\n", this.employees);
+		System.out.printf("Items in stock: %d\n", this.getTotalNumItems());
+		System.out.printf("Total inventory value: %.2f\n", this.getTotalInventoryValue());
+	}
+    
+    
 }

@@ -8,7 +8,8 @@ import java.util.Scanner;
 /* Scott Dickson  
  * Mark Dickson
  * 1/1/2018
- * Main file for the game
+ * Main file for the game. Handles loading saved state
+ * or starting a new game.
 */
 
 public class Main {
@@ -16,6 +17,8 @@ public class Main {
 	public static void main(String args[]){
 		boolean done = false;
 		State st = new State("");
+		Turn turn;
+		
 		Scanner in = new Scanner(System.in);
 		String[] input = new String[0];
 		
@@ -41,32 +44,12 @@ public class Main {
 			
 		}
 		
+		turn = new Turn(st);
 		done = false;
-		while(!done) {
+		
+		while(!turn.done) {
 			System.out.println("What will you do? Enter an action or \"help\"");
-						
-			input = in.nextLine().split(" ");// command format: "<cmd> arg1 arg2..."
-			
-			
-			switch(input[0]) {
-				case "status":
-					print_status(st);
-					break;
-				case "buy":
-					int num = Integer.parseInt(input[1]);
-					String type = input[2];
-					System.out.println(st.buy(num,type));
-					break;
-				case "help":
-					break;
-				case "quit":
-					done = true;
-					break;
-				default:
-					System.out.println("Invalid command!");
-					break;
-			}
-			
+			turn.stepTurn(in.nextLine());// command format: "<cmd> arg1 arg2..."
 		}
 		
 		System.out.println("Thanks for playing!");
@@ -93,13 +76,5 @@ public class Main {
 		State st = new State("");
 		return st;
 	}
-	
-	private static void print_status(State st) {
-		System.out.printf("%s Business Report:\n", st.storeName);
-		System.out.printf("Captial: %f\n", st.capital);
-		System.out.printf("Managers: %d\n", st.managers);
-		System.out.printf("Employees: %d\n", st.employees);
-		System.out.printf("Items in stock: %d\n", st.getTotalNumItems());
-		System.out.printf("Total inventory value: %.2f\n",st.getTotalInventoryValue());
-	}
+
 }

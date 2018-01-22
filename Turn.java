@@ -16,16 +16,38 @@ public class Turn {
 	State st;
 	int turn_number;
 	Random rng;
+	boolean done;
 	
 	public Turn(State st) {
 		this.st = st;
-		this.turn_number = 0;
+		this.turn_number = 1;
 		this.rng = new Random(getSeed());
+		done = false;
 	}
 	
 	//SCOTT TODO: Given user input for a command step the game state
 	public void stepTurn(String input) {
-		
+		String[] cmd = input.split(" ");
+				
+		switch(cmd[0]) {
+		case "status":
+			this.st.print_state();
+			break;
+		case "buy":
+			int num = Integer.parseInt(cmd[1]);
+			String type = cmd[2];
+			System.out.println(this.st.buy(num,type));
+			break;
+		case "help":
+			break;
+		case "quit":
+			this.done = true;
+			break;
+		default:
+			System.out.println("Invalid command!");
+			break;
+		}
+		this.turn_number++;
 	}
 	
 	/* MARK TODO 4: Generate a unique seed for the rng above
