@@ -68,10 +68,7 @@ public class Main {
 		}
 		return st;
 	}
-	
-	
-	
-	
+		
 	/* Effectively the main method. Read input and loop */
 	private static void repl(State st) {
 		Turn turn = new Turn(st);
