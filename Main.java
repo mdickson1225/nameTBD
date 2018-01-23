@@ -15,43 +15,9 @@ import java.util.Scanner;
 public class Main {
 	
 	public static void main(String args[]){
-		boolean done = false;
-		State st = new State("");
-		Turn turn;
 		
-		Scanner in = new Scanner(System.in);
-		String[] input = new String[0];
-		
-		//Print start screen to either start a new game or load existing save file
-		while(!done) {
-			System.out.printf("Welcome to Boss!\n1) New Game\n2)Load Saved\n");
-			input = in.nextLine().split(" ");
-			
-			switch(input[0]) {
-			case "1":
-				System.out.println("What's the name of this new business?");
-				st = new State(in.nextLine());
-				
-				done = true;
-				break;
-			case "2":
-				st = read_state();
-				done = true;
-				break;
-			default:
-				break;
-			}
-			
-		}
-		
-		turn = new Turn(st);
-		done = false;
-		
-		while(!turn.done) {
-			System.out.println("What will you do? Enter an action or \"help\"");
-			turn.stepTurn(in.nextLine());// command format: "<cmd> arg1 arg2..."
-		}
-		
+		State st = init_state();
+		repl(st);
 		System.out.println("Thanks for playing!");
 		
 	}
@@ -76,5 +42,48 @@ public class Main {
 		State st = new State("");
 		return st;
 	}
+	
+	/* Prompt to either start a new game or read a saved file */
+	private static State init_state() {
+		Scanner in = new Scanner(System.in);
+		State st = new State("");
+		boolean done = false;
+		
+		while(!done) {
+			System.out.printf("Welcome to Boss!\n1) New Game\n2)Load Saved\n");
+					
+			switch(in.nextLine().split(" ")[0]) {
+				case "1":
+					System.out.println("What's the name of this new business?");
+					st = new State(in.nextLine());
+					done = true;
+					break;
+				case "2":
+					st = read_state();
+					done = true;
+					break;
+				default:
+					break;
+			}
+		}
+		return st;
+	}
+	
+	
+	
+	
+	/* Effectively the main method. Read input and loop */
+	private static void repl(State st) {
+		Turn turn = new Turn(st);
+		Scanner in = new Scanner(System.in);
+		
+		while(!turn.done) {
+			System.out.println("What will you do? Enter an action or \"help\"");
+			turn.stepTurn(in.nextLine());// command format: "<cmd> arg1 arg2..."
+		}
+	}
+	
+	
+	
 
 }
