@@ -39,8 +39,6 @@ public class State {
     HashMap<String, Integer> inventory;
     int[] inventory_quality;
 
-    
-    
     double stock_price; //Possibly later
     float store_quality; //Calculation TBD
     double sq_Change;
@@ -110,7 +108,7 @@ public class State {
 	 TODO: Mark */
     private float get_quality() {
     	store_quality = this.capital + 20*this.employees+ 40*this.managers + 30*this.num_item_types;
-    	//First attempt at the quality function should probibly be changed later.
+    	//First attempt at the quality function should probably be changed later.
     	return store_quality;
     }
         
@@ -130,12 +128,14 @@ public class State {
     	return res;
     }
     
-    //SCOTT TODO 1
-    //Given a hashmap, encode its contents in a string and return it
+    /* Given a Hashmap, encode its contents in a string and return it */
     private String encrypt_map(HashMap<String, Integer> hm) {
-    	return "";
+    	String res = "";
+    	for(Map.Entry<String, Integer> en : hm.entrySet()) {
+    		res += " " + en.getKey() + " " + Double.toString(encrypt( (double) en.getValue()));
+    	}
+    	return res;
     }
-    
     
     
     //MARK TODO 2
@@ -143,7 +143,6 @@ public class State {
     //original value before encryption by reversing the function used to encrypt it (1/1+...)
     private double decrypt(double x) {
     	return log((1/x)-1);
-    	
     }
     //Tried my hand at making the stock part
     //TODO - randomness? 
@@ -153,27 +152,27 @@ public class State {
       
     }
     
-    //MARK TODO 3
-    //Given an array of encrypted values, decrypt all of them and return the decrypted array 
+
+    /* Given an array of encrypted values, decrypt all of them and return the decrypted array */
     private double[] decrypt_arr(double[] x) {
     	double[] res = x;
     	double [] decArr = new double[res.length];   
     	for (int i = 0; i < res.length; i++) {
     	double decVal = decrypt(res[i]);
     	decArr[i] = decVal;
-    	//Why are we returning a decrypted int array but the encrypted array is a double array? 
     	}
     	return decArr;
     }
     
     
-    //Take a string as input in the format "s1 i1 s2 i2..." etc.
+    /* Take a string as input in the format "s1 e1 s2 e2..." etc.
+       where e1 is an encrypted integer */
     private HashMap<String, Integer> decrypt_map(String hm){
     	String[] kv_pairs = hm.split(" ");
     	HashMap<String, Integer> hmap = new HashMap<String, Integer>();
     	
     	for(int i = 0; i < kv_pairs.length; i += 2) {
-    		hmap.put(kv_pairs[i], Integer.parseInt(kv_pairs[i+1]) );
+    		hmap.put(kv_pairs[i], (int) decrypt(Double.parseDouble(kv_pairs[i+1])) );
     	}
     	return hmap;
     }
@@ -181,7 +180,7 @@ public class State {
     
     //MARK TODO 1: test out this function and see how it stores the arrays. Preferably it'll be 
     //space separated so storing [1,2,3] given something like "1 2 3" which can then be parsed
-    private void save(String filename) {
+    public void save(String filename) {
         try {
             PrintWriter out = new PrintWriter(new FileWriter(filename, false));
             out.println(storeName);
@@ -200,28 +199,25 @@ public class State {
         }
         
     }
-    /* Seems to try and load the game state data from its stored format?
-     * Will need to account for undoing encryption
-     * MARK TODO 1: Given a file stored just how "save" above does it
-     * go through and get values for each of state's instance variables
-     * by reading the line and undoing the encryption */
+    
+    /* Tries to load game state from a formatted, saved file */
     public void load(String filename) throws FileNotFoundException {
         File f = new File (filename); //should be a constant but might as well allow different names 
         Scanner sc = new Scanner(f);
+        this.storeName = sc.nextLine();
         this.capital = (float) decrypt(Double.parseDouble(sc.nextLine()));
         this.employees = (int) decrypt(Double.parseDouble(sc.nextLine()));
-        //Not certain how to do the array and hashmap. Will work on later.
+        this.inventory = decrypt_map(sc.nextLine());
         this.inventory_quality = cast_to_int_array(decrypt_arr((array_from_string(sc.nextLine()))));
         this.managers = (int) decrypt(Double.parseDouble(sc.nextLine()));
         this.num_item_types = (int) decrypt(Double.parseDouble(sc.nextLine()));
         this.stock_price =(int) decrypt(Double.parseDouble(sc.nextLine()));
         this.store_quality = (float) decrypt(Double.parseDouble(sc.nextLine()));
         this.store_type = (int) decrypt(Double.parseDouble(sc.nextLine()));
-        //Add in lines to read inventory and the rest of the variables as above 
         sc.close();        
     }
     
-    //Attempt to buy n of item [item] and return a string of the result
+    /* Attempt to buy n of item [item] and return a string of the result */
     public String buy(int n, String item) {
     	if(!this.item_prices.containsKey(item))
     		return String.format("%s is not a valid item\n", item);

@@ -39,6 +39,12 @@ public class Turn {
 			String type = cmd[2];
 			System.out.println(this.st.buy(num,type));
 			break;
+		//MARK TODO: add confirmation message for saving 
+		case "save":
+			this.st.save("progress.boss");
+			System.out.println("Saved game progress!");
+			break;
+			
 		case "help":
 			break;
 		case "quit":

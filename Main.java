@@ -19,28 +19,6 @@ public class Main {
 		State st = init_state();
 		repl(st);
 		System.out.println("Thanks for playing!");
-		
-	}
-	
-	//Target data/.saved and try to create a state object from it
-	//WIP: need better constrcutors
-	private static State read_state() {
-		try {
-			BufferedReader fr = new BufferedReader(new FileReader(""));
-			String name = fr.readLine();
-			float capital = Float.parseFloat(fr.readLine());
-			int employees = Integer.parseInt(fr.readLine());
-			int managers = Integer.parseInt(fr.readLine());
-
-			//Pass all the parameters to this constructor
-			State st = new State(name);
-			return st;
-		} catch (IOException e) {
-			System.out.println("File not found");
-		}
-		
-		State st = new State("");
-		return st;
 	}
 	
 	/* Prompt to either start a new game or read a saved file */
@@ -59,8 +37,12 @@ public class Main {
 					done = true;
 					break;
 				case "2":
-					st = read_state();
-					done = true;
+					try {
+						st.load("progress.boss");
+						done = true;
+					} catch (FileNotFoundException e) {
+						System.out.println("No saved file on record!");
+					}
 					break;
 				default:
 					break;
