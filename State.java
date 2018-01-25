@@ -37,7 +37,7 @@ public class State {
     HashMap<String, Float> item_prices;
     int num_item_types;
     HashMap<String, Integer> inventory;
-    int[] inventory_quality;
+    //int[] inventory_quality;
 
     double stock_price; //Possibly later
     float store_quality; //Calculation TBD
@@ -171,7 +171,7 @@ public class State {
     	String[] kv_pairs = hm.split(" ");
     	HashMap<String, Integer> hmap = new HashMap<String, Integer>();
     	
-    	for(int i = 0; i < kv_pairs.length; i += 2) {
+    	for(int i = 0; i < kv_pairs.length - 1; i += 2) {
     		hmap.put(kv_pairs[i], (int) decrypt(Double.parseDouble(kv_pairs[i+1])) );
     	}
     	return hmap;
@@ -187,7 +187,7 @@ public class State {
             out.println(encrypt((double) capital));
             out.println(encrypt((double) employees));
             out.println(encrypt_map(inventory)); 
-            out.println(encrypt_arr(inventory_quality)); 
+            //out.println(encrypt_arr(inventory_quality)); 
             out.println(encrypt((double) managers));
             out.println(encrypt((double) num_item_types));
             out.println(encrypt((double) stock_price));
@@ -208,7 +208,7 @@ public class State {
         this.capital = (float) decrypt(Double.parseDouble(sc.nextLine()));
         this.employees = (int) decrypt(Double.parseDouble(sc.nextLine()));
         this.inventory = decrypt_map(sc.nextLine());
-        this.inventory_quality = cast_to_int_array(decrypt_arr((array_from_string(sc.nextLine()))));
+        // this.inventory_quality = cast_to_int_array(decrypt_arr((array_from_string(sc.nextLine()))));
         this.managers = (int) decrypt(Double.parseDouble(sc.nextLine()));
         this.num_item_types = (int) decrypt(Double.parseDouble(sc.nextLine()));
         this.stock_price =(int) decrypt(Double.parseDouble(sc.nextLine()));

@@ -28,11 +28,13 @@ public class Main {
 		boolean done = false;
 		
 		while(!done) {
-			System.out.printf("Welcome to Boss!\n1) New Game\n2)Load Saved\n");
-					
+			System.out.printf("Welcome to Boss!\n1) New Game\n2)Load Saved");
+			System.out.printf("\n>> ");		
+			
 			switch(in.nextLine().split(" ")[0]) {
 				case "1":
 					System.out.println("What's the name of this new business?");
+					System.out.printf("\n>> ");
 					st = new State(in.nextLine());
 					done = true;
 					break;
@@ -58,6 +60,7 @@ public class Main {
 		
 		while(!turn.done) {
 			System.out.println("What will you do? Enter an action or \"help\"");
+			System.out.printf("\n>> ");
 			turn.stepTurn(in.nextLine());// command format: "<cmd> arg1 arg2..."
 		}
 	}
